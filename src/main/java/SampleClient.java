@@ -28,8 +28,7 @@ public class SampleClient {
         
         // Search for Patient resources
         
-        String fileName = "config/patients.txt";
-        
+        String fileName = "config/patients.txt";  
         File file = new File(SampleClient.class.getResource(fileName).getFile());
         List<String> names=Collections.emptyList();
         try {
@@ -41,14 +40,22 @@ public class SampleClient {
         	long startTime = System.currentTimeMillis();
         	Iterator<String> lastNames = names.iterator();
 	        while(lastNames.hasNext()) {
+	        	if(i!=3) {
+	        		Bundle response = client
+			                .search()
+			                .forResource("Patient")
+			                .where(Patient.FAMILY.matches().value(lastNames.next()))
+			                .returnBundle(Bundle.class)	
+			                .execute();
+	        	}else {
 		        Bundle response = client
 		                .search()
 		                .forResource("Patient")
 		                .where(Patient.FAMILY.matches().value(lastNames.next()))
+		                .withAdditionalHeader("Cache-Control", "no-cache, no-store, max-age=0, must-revalidate")
 		                .returnBundle(Bundle.class)	
-		                .cacheControl(new CacheControlDirective().setNoCache(true))
 		                .execute();
-		               
+	        	}     
 	        }
 	        long endTime =System.currentTimeMillis();
 	        System.out.println("SUCCESS: Application execution time = " + (endTime - startTime) + " ms");

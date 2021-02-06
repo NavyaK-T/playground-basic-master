@@ -11,7 +11,7 @@ public class FileUtilsTest {
 	@Test
     public void testReadFile(){
         ClassLoader classLoader = this.getClass().getClassLoader();
-        File file = new File(classLoader.getResource("/patients.txt").getFile());
+        File file = new File(classLoader.getResource("patients.txt").getFile());
         assertTrue(file.exists());
     }
 	
